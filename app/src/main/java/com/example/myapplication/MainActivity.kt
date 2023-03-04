@@ -51,6 +51,6 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         timer.cancel()
     }
-
-}
+    var name = "Hi Ibra"
+ }
 
