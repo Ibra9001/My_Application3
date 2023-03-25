@@ -8,39 +8,44 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 
 class MainActivity : AppCompatActivity() {
-    private  lateinit var timer: CountDownTimer
+    private lateinit var timer: CountDownTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
-        val root = findViewById<ConstraintLayout>(R.id.root)
-        val textView = findViewById<TextView>(R.id.textView)
-        val count2 = findViewById<Button>(R.id.button)
+        val TIMER_DURATION = 10000L
+        var timerIsStarted = false
+        var clicks = 0
+        var highScore = 0
 
+        val scoreButton = findViewById<TextView>(R.id.score_button)
+        val timerTextView = findViewById<TextView>(R.id.timer_tv)
+        val highScoreTextView = findViewById<TextView>(R.id.highscore_tv)
 
-        val timer = object : CountDownTimer(10000, 1000) {
-            override fun onTick(remaining: Long) {
-                textView.text = (remaining / 1000).toString()
+        val timer = object : CountDownTimer(TIMER_DURATION, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timerTextView.text = (millisUntilFinished / 1000).toString()
 
             }
 
             override fun onFinish() {
-                textView.text = "Done!"
+                if (clicks > highScore) {
+                    timerIsStarted = false
+                    highScore = clicks
+                    clicks = 0
+                    scoreButton.text = clicks.toString()
+                }
             }
-
         }
-
-        count2.setOnClickListener {
-            timer.start()
+        scoreButton.setOnClickListener {
+            if (!timerIsStarted) {
+                timer.start()
+                timerIsStarted = true
+            } else {
+                clicks++
+                scoreButton.text = clicks.toString()
+            }
         }
     }
-
-
-    override fun onStop() {
-        super.onStop()
-        timer.cancel()
-    }
-    var name = "Hi Ibra"
- }
-
+}
